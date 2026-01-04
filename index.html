@@ -4,9 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cause:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Tic-Tac-Toe</h1>
+    <div class="container-title">
+        <h3>Tic Tac Toe</h3>
+    </div>
+
+    <div class="container-game-state">
+        <h2 id="game-state">-</h2>
+    </div>
+
+    <div class="container-gameboard">
+        <div id="player-one-status">
+            <h3 id="player1-nombre">Player 1</h3>
+            <h3>X</h3>
+        </div>
+        <div id="gameboard">
+            <div id="0" class="cuadrado"></div>
+            <div id="1" class="cuadrado"></div>
+            <div id="2" class="cuadrado"></div>
+            <div id="3" class="cuadrado"></div>
+            <div id="4" class="cuadrado"></div>
+            <div id="5" class="cuadrado"></div>
+            <div id="6" class="cuadrado"></div>
+            <div id="7" class="cuadrado"></div>
+            <div id="8" class="cuadrado"></div>
+        </div>
+        <div id="player-two-status">
+            <h3 id="player2-nombre">Player 2</h3>
+            <h3>O</h3>
+        </div>
+    </div>
+
+    <div class="container-buttons">
+        <button id="start-button">Start</button>
+        <button id="restart-button">Re-Start</button>
+    </div>
+    
 </body>
     <script src="script.js"></script>
 </html>

@@ -1,129 +1,136 @@
-//GAMEBOARD
+//DOM
+const cuadrados = document.querySelectorAll(".cuadrado");
+const tableroHTML = document.getElementById("gameboard");
+const comenzarBoton = document.getElementById("start-button");
+const resetearBoton = document.getElementById("restart-button");
+const estadoJuego = document.getElementById("game-state");
+const nombreJugador1 = document.getElementById("player1-nombre");
+const nombreJugador2 = document.getElementById("player2-nombre");
 
-//PLAYERS
+//VARIABLES GLOBALES
+let cuadradoApretado = null;
 
+//CREAR JUGADOR
+function crearJugador(nombre, simbolo) {
 
+    let getNombre = () => nombre;
+    let getSimbolo = () => simbolo;
 
-//RESULT
-
-//GAME
-
-//CHOOSE 
-function choose(gameboard){
-        do {
-        validMove = false;
-        let playerTurn = Number.parseInt(prompt("Choose a spot (1-9): / 0 = EXIT "));
-        
-        if(playerTurn < 1 || playerTurn > 9){
-            console.log("NO ES VALIDO");
-            
-            validMove = true;
-        } else {
-            switch(playerTurn){
-                case 1:
-                    console.log("GOL")
-                    gameboard[0] = "X";
-                    validMove = true;
-                    break;
-                case 2:
-                    gameboard[1] = "X";
-                    validMove = true;
-                    break;
-                case 3:
-                    gameboard[2] = "X";
-                    validMove = true;
-                    break;
-                case 4:
-                    gameboard[3] = "X";
-                    validMove = true;
-                    break;
-                case 5:
-                    gameboard[4] = "X";
-                    validMove = true;
-                    break;
-                case 6:
-                    gameboard[5] = "X";
-                    validMove = true;
-                    break;
-                case 7:
-                    gameboard[6] = "X";
-                    validMove = true;
-                    break;
-                case 8:
-                    gameboard[7] = "X";
-                    validMove = true;
-                    break;
-                case 9:
-                    gameboard[8] = "X";
-                    validMove = true;
-                    break;
-
-                case 0:
-                    console.log("EXIT");
-                    validMove = true;
-                    break;
-                default:
-                    console.log("That is not a valid number. Try again");
-                    break;
-            }            
-        }
-    } while (!validMove);
+    return { getNombre, getSimbolo };
 }
 
-function checkWin(gameboard){
+function crearTablero() {
+    return ["", "", "", "", "", "", "", "", "",];
+}
 
-    let juegoTerminado = false;
-
-    if(
-        //HORIZONTAL
-        (gameboard[0] == "X" && gameboard[1] == "X" && gameboard[2] == "X") ||
-        (gameboard[3] == "X" && gameboard[4] == "X" && gameboard[5] == "X") ||
-        (gameboard[6] == "X" && gameboard[7] == "X" && gameboard[8] == "X") ||
-
-        //VERTICAL
-        (gameboard[0] == "X" && gameboard[3] == "X" && gameboard[6] == "X") ||
-        (gameboard[1] == "X" && gameboard[4] == "X" && gameboard[7] == "X") ||
-        (gameboard[2] == "X" && gameboard[5] == "X" && gameboard[8] == "X") ||
-
-        //CRUZADO
-        (gameboard[0] == "X" && gameboard[4] == "X" && gameboard[8] == "X") ||
-        (gameboard[2] == "X" && gameboard[4] == "X" && gameboard[6] == "X")
-    ) {
-        console.log("GANASTE");
-        juegoTerminado = true;                
-    } else {
-        juegoTerminado = false;
+//RENDER TABLERO
+function renderTablero(tableroHTML, contenido) {
+    for (let i = 0; i < contenido.length; i++) {
+        tableroHTML.children[i].innerHTML = contenido[i];
     }
 
-    return juegoTerminado;
 }
 
-function startGame(){
+//CORROBORAR GANADOR
+function chequearSiHayGanador(tablero, jugador) {
 
-    const gameboard = ["0", "1", "2", 
-                       "3", "4", "5",
-                       "6", "7", "8"];
+    let hayGanador = false;
 
-    let showGameboard = (gameboard) => console.log(gameboard);
+    if (
+        //HORIZONTAL
+        (tablero[0] == jugador.getSimbolo() && tablero[1] == jugador.getSimbolo() && tablero[2] == jugador.getSimbolo()) ||
+        (tablero[3] == jugador.getSimbolo() && tablero[4] == jugador.getSimbolo() && tablero[5] == jugador.getSimbolo()) ||
+        (tablero[6] == jugador.getSimbolo() && tablero[7] == jugador.getSimbolo() && tablero[8] == jugador.getSimbolo()) ||
 
+        //VERTICAL
+        (tablero[0] == jugador.getSimbolo() && tablero[3] == jugador.getSimbolo() && tablero[6] == jugador.getSimbolo()) ||
+        (tablero[1] == jugador.getSimbolo() && tablero[4] == jugador.getSimbolo() && tablero[7] == jugador.getSimbolo()) ||
+        (tablero[2] == jugador.getSimbolo() && tablero[5] == jugador.getSimbolo() && tablero[8] == jugador.getSimbolo()) ||
 
-    let continueGame = true;
+        //CRUZADO
+        (tablero[0] == jugador.getSimbolo() && tablero[4] == jugador.getSimbolo() && tablero[8] == jugador.getSimbolo()) ||
+        (tablero[2] == jugador.getSimbolo() && tablero[4] == jugador.getSimbolo() && tablero[6] == jugador.getSimbolo())
+    ) {
+        console.log(`El ${jugador.getNombre()} ha ganado la partida.`);
+        hayGanador = true;
+    } else {
+        hayGanador = false;
+    }
 
-    do {
-        choose(gameboard);    
-        showGameboard(gameboard);
-        let juegoTerminado = checkWin(gameboard);
-        if(juegoTerminado) { continueGame = false; }
-
-    } while (continueGame);
-    
-   
-    
- 
-    
-    
-    
+    return hayGanador;
 }
 
+function comenzarJuego() {
 
-startGame();
+    let tablero = crearTablero();
+    renderTablero(tableroHTML, tablero);
+
+    let nombres = elegirNombres();
+
+    let jugador1 = crearJugador(nombres[0], "X");
+    let jugador2 = crearJugador(nombres[1], "O");
+
+    nombreJugador1.innerHTML = jugador1.getNombre();
+    nombreJugador2.innerHTML = jugador2.getNombre();
+
+    let turnoPar = true;
+    let hayGanador = false;
+
+    estadoJuego.innerHTML = `Comienza ${jugador1.getNombre()}`;
+
+    cuadrados.forEach((cuadrado) => {
+        cuadrado.addEventListener("click", (e) => {
+
+            if (hayGanador) return;
+
+            cuadradoApretado = e.target.id;
+            if (tablero[cuadradoApretado] != "") {
+                alert("movimiento prohibido")
+            } else {
+                if (turnoPar) {
+                    estadoJuego.innerHTML = `Es el turno de ${jugador2.getNombre()}`
+                    elegirPosicion(tablero, cuadradoApretado, jugador1);
+                    hayGanador = chequearSiHayGanador(tablero, jugador1);
+                } else {
+
+                    elegirPosicion(tablero, cuadradoApretado, jugador2);
+                    hayGanador = chequearSiHayGanador(tablero, jugador2);
+                    estadoJuego.innerHTML = `Es el turno de ${jugador1.getNombre()}`
+                }
+
+                turnoPar = !turnoPar;
+                renderTablero(tableroHTML, tablero);
+            }
+
+            if (hayGanador) {
+                estadoJuego.innerHTML = `Ganador: ${!turnoPar ? jugador1.getNombre() : jugador2.getNombre()}`;
+            }
+        });
+    });
+
+    resetearBoton.addEventListener("click", () => {
+        tablero.fill("");
+        turnoPar = true;
+        hayGanador = false;
+        renderTablero(tableroHTML, tablero);
+    }
+);
+
+
+
+}
+
+function elegirPosicion(tablero, posicion, jugador) {
+    tablero[posicion] = jugador.getSimbolo();
+}
+
+//ELEGIR NOMBRES
+function elegirNombres() {
+    let nombre1 = prompt("Nombre de jugador 1: ")
+    let nombre2 = prompt("Nombre de jugador 2: ");
+    return [nombre1, nombre2];
+}
+
+comenzarBoton.addEventListener("click", comenzarJuego);
+
+
